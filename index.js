@@ -29,13 +29,20 @@ app.post('/todo/create', async (req, res) =>{
 })
 
 app.put('/todo/update', async (req,res) =>{
-  let result = await pool.query('UPDATE public.todoList(id, task) WHERE(id = 4)', [req.body.id, req.body.task])
+  let result = await pool.query('UPDATE public.todoList SET task = $2 WHERE id = $1', [req.body.id, req.body.task])
   console.log(result);
   res.json({
     "status": "Task Updated"
   })
 })
-    
+
+app.delete('/todo/delete', async (req,res) =>{
+  let result = await pool.query('DELETE FROM public.todoList WHERE id = $1', [req.body.id])
+  console.log(result);
+  res.json({
+    "status": "Task Deleted"
+  })
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
