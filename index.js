@@ -13,6 +13,8 @@ app.use(
   })
 )
 
+
+//GET ALL TASKS 
 app.get('/testdb', async (request, response) => {
   let res =  await pool.query('select * from public.todoList')
   console.log(res)
@@ -20,22 +22,25 @@ app.get('/testdb', async (request, response) => {
   response.json({todo: res.rows})
 })
 
+
+//GET ALL TASKS WITH FILTER
 app.get('/donetask', async (request, response) => {
-  let res =  await pool.query('select * from public.todoList WHERE done=true')
+  let res =  await pool.query('select * from public.todoList FILTER WHERE done=true')
   console.log(res)
   //response.json({info: 'Node.js, Express, and Postgres API'})
-  response.json({todo: res.rows})
-})
-
-app.get('/count', async (request, response) => {
-  let res =  await pool.query('select count(*) as Total-Tasks, count(*) FILTER (WHERE done=true) as Done-Tasks, count(*) FILTER (WHERE done=false) as Pending-Tasks from public.todoList')
-  console.log(res)
-  //response.json({info: 'Node.js, Express, and Postgres API'})
-  response.json({todo: res.rows})
+  response.json(res.rows)
 })
 
 
+//GET COUNT TOTAL,DONE,PENDING
+app.get('/todo/count', async (request, response) => {
+  let res =  await pool.query('select count(*) as TotalTasks, count(*) FILTER (WHERE done=true) as DoneTasks, count(*) FILTER (WHERE done=false) as PendingTasks from public.todoList')
+  console.log(res)
+  //response.json({info: 'Node.js, Express, and Postgres API'})
+  response.json(res.rows)
+})
 
+//CREATE A TASK
 app.post('/todo/create', async (req, res) =>{
   let result = await pool.query('INSERT INTO public.todoList(id, task, done) VALUES($1, $2, $3)', [req.body.id, req.body.task, req.body.done])
   console.log(result)
@@ -44,16 +49,9 @@ app.post('/todo/create', async (req, res) =>{
   })
 })
 
+//UPDATE A TASK
 app.put('/todo/update', async (req,res) =>{
-  let result = await pool.query('UPDATE public.todoList SET done = $3 WHERE id = $1', [req.body.id, req.body.task, req.body.done])
-  console.log(result);
-  res.json({
-    "status": "Task Updated"
-  })
-})
-
-app.put('/updateID', async (req,res) =>{
-  let result = await pool.query('ALTER TABLE public.todoList SET id SERIAL PRIMARY KEY',[req.body.id])
+  let result = await pool.query('UPDATE public.todoList SET task = $2 WHERE id = $1', [req.body.id, req.body.task])
   console.log(result);
   res.json({
     "status": "Task Updated"
@@ -61,7 +59,7 @@ app.put('/updateID', async (req,res) =>{
 })
 
 
-
+//DELETE A TASK
 app.delete('/todo/delete', async (req,res) =>{
   let result = await pool.query('DELETE FROM public.todoList WHERE id = $1', [req.body.id])
   console.log(result);
