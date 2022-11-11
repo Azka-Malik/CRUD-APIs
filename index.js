@@ -19,7 +19,7 @@ app.get('/testdb', async (request, response) => {
   let res =  await pool.query('select * from public.todoList')
   console.log(res)
   //response.json({info: 'Node.js, Express, and Postgres API'})
-  response.json({todo: res.rows})
+  response.json(res.rows)
 })
 
 
@@ -27,7 +27,6 @@ app.get('/testdb', async (request, response) => {
 app.get('/donetask', async (request, response) => {
   let res =  await pool.query('select * from public.todoList FILTER WHERE done=true')
   console.log(res)
-  //response.json({info: 'Node.js, Express, and Postgres API'})
   response.json(res.rows)
 })
 
@@ -36,7 +35,6 @@ app.get('/donetask', async (request, response) => {
 app.get('/todo/count', async (request, response) => {
   let res =  await pool.query('select count(*) as TotalTasks, count(*) FILTER (WHERE done=true) as DoneTasks, count(*) FILTER (WHERE done=false) as PendingTasks from public.todoList')
   console.log(res)
-  //response.json({info: 'Node.js, Express, and Postgres API'})
   response.json(res.rows)
 })
 

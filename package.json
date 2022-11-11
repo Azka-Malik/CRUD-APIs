@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Azka-Malik/Heroku-Practice#readme",
   "dependencies": {
     "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "id-auto-increment": "^1.0.1",
     "nodemon": "^2.0.20",
