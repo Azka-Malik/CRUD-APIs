@@ -5,6 +5,8 @@ const app = express()
 const port = 3000
 
 const pool = require('./dbConn')
+const TodoController = require('./controllers/todoController')
+const todoController = new TodoController()
 
 app.use(bodyParser.json())
 app.use(
@@ -14,14 +16,14 @@ app.use(
 )
 
 
+app.get ('/taskdone',todoController.getAll)
 //GET ALL TASKS 
-app.get('/testdb', async (request, response) => {
-  let res =  await pool.query('select * from public.todoList')
-  console.log(res)
-  //response.json({info: 'Node.js, Express, and Postgres API'})
-  response.json(res.rows)
-})
-
+// app.get('/testdb', async (request, response) => {
+//   let res =  await pool.query('select * from public.todoList')
+//   console.log(res)
+//   //response.json({info: 'Node.js, Express, and Postgres API'})
+//   response.json(res.rows)
+// })
 
 //GET ALL TASKS WITH FILTER
 app.get('/donetask', async (request, response) => {
@@ -38,14 +40,15 @@ app.get('/todo/count', async (request, response) => {
   response.json(res.rows)
 })
 
+app.post('/todo/create', todoController.createTask)
 //CREATE A TASK
-app.post('/todo/create', async (req, res) =>{
-  let result = await pool.query('INSERT INTO public.todoList(id, task, done) VALUES($1, $2, $3)', [req.body.id, req.body.task, req.body.done])
-  console.log(result)
-  res.json({
-    "status": "Task created"
-  })
-})
+// app.post('/todo/create', async (req, res) =>{
+//   let result = await pool.query('INSERT INTO public.todoList(id, task, done) VALUES($1, $2, $3)', [req.body.id, req.body.task, req.body.done])
+//   console.log(result)
+//   res.json({
+//     "status": "Task created"
+//   })
+// })
 
 //UPDATE A TASK
 app.put('/todo/update', async (req,res) =>{
