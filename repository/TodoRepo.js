@@ -1,4 +1,4 @@
-const pool =require('../dbconn')
+const pool =require('../dbConn')
 
 class TodoRepo{
     async getAllTasks(){
